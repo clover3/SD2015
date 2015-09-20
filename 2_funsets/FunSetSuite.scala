@@ -77,6 +77,9 @@ class FunSetSuite extends FunSuite {
     val s1 = singletonSet(1)
     val s2 = singletonSet(2)
     val s3 = singletonSet(3)
+    val s_odd = (x:Int) => x % 2 ==1
+    val s_even= (x:Int) => x % 2 ==0
+    val s_three_multiple= (x:Int) => x % 3 ==0
   }
 
   /**
@@ -86,11 +89,11 @@ class FunSetSuite extends FunSuite {
    * Once you finish your implementation of "singletonSet", exchange the
    * function "ignore" by "test".
    */
-  ignore("singletonSet(1) contains 1") {
+  test("singletonSet(1) contains 1") {
     
     /**
      * We create a new instance of the "TestSets" trait, this gives us access
-     * to the values "s1" to "s3". 
+     * to the values "s1" to "s3".
      */
     new TestSets {
       /**
@@ -101,12 +104,89 @@ class FunSetSuite extends FunSuite {
     }
   }
 
-  ignore("union contains all elements") {
+  test("union contains all elements") {
     new TestSets {
       val s = union(s1, s2)
       assert(contains(s, 1), "Union 1")
       assert(contains(s, 2), "Union 2")
       assert(!contains(s, 3), "Union 3")
+    }
+  }
+
+  test("Union Test 1"){
+    new TestSets {
+      val s = union(s_even, s_odd)
+      assert( contains(s, 1), "union(odd,even) should contain 1")
+      assert( contains(s, 2), "union(odd,even) should contain 2")
+      assert( contains(s, 3), "union(odd,even) should contain 3")
+      assert( contains(s, 4), "union(odd,even) should contain 4")
+      assert( contains(s, 5), "union(odd,even) should contain 5")
+      assert( contains(s, 6), "union(odd,even) should contain 6")
+    }
+  }
+
+  test("Intersect Test 1") {
+    new TestSets {
+      val s = intersect(s_even, s_odd)
+      assert(!contains(s, 1), "intersect(odd,even) should not contain 1")
+      assert(!contains(s, 2), "intersect(odd,even) should not contain 2")
+      assert(!contains(s, 3), "intersect(odd,even) should not contain 3")
+      assert(!contains(s, 4), "intersect(odd,even) should not contain 4")
+      assert(!contains(s, 5), "intersect(odd,even) should not contain 5")
+      assert(!contains(s, 6), "intersect(odd,even) should not contain 6")
+    }
+  }
+
+  test("Intersect Test 2") {
+    new TestSets {
+      val s = intersect(s_even, s_three_multiple)
+      assert(!contains(s, 1), "intersect(even,three multiple) should not contain 1")
+      assert(!contains(s, 2), "intersect(even,three multiple) should not contain 2")
+      assert(!contains(s, 3), "intersect(even,three multiple) should not contain 3")
+      assert(!contains(s, 4), "intersect(even,three multiple) should not contain 4")
+      assert(!contains(s, 5), "intersect(even,three multiple) should not contain 5")
+      assert(contains(s, 6), "intersect(even,three multiple) should contain 6")
+      assert(contains(s, 12), "intersect(even,three multiple) should contain 12")
+    }
+  }
+
+  test("Diff Test 1") {
+    new TestSets {
+      val s = diff(s_even, s_three_multiple)
+      assert(contains(s, 1), "diff(even,three multiple) should contain 1")
+      assert(contains(s, 2), "diff(even,three multiple) should contain 2")
+      assert(contains(s, 3), "diff(even,three multiple) should contain 3")
+      assert(contains(s, 4), "diff(even,three multiple) should contain 4")
+      assert(contains(s, 5), "diff(even,three multiple) should contain 5")
+      assert(!contains(s, 6), "diff(even,three multiple) should not contain 6")
+      assert(!contains(s, 12), "diff(even,three multiple) should not contain 12")
+    }
+  }
+
+  test("filter Test 1") {
+    new TestSets {
+      def p = (x:Int) => x < 10
+      val s = filter(s_even, p)
+      assert(!contains(s, 1), "filter(even,less than 10) should not contain 1")
+      assert(contains(s, 2), "filter(even,less than 10) should contain 2")
+      assert(!contains(s, 3), "filter(even,less than 10) should not contain 3")
+      assert(contains(s, 4), "filter(even,less than 10) should contain 4")
+      assert(!contains(s, 15), "filter(even,less than 10) should not contain 6")
+      assert(!contains(s, 10), "filter(even,less than 10) should not contain 12")
+    }
+  }
+
+  test("Map works") {
+    new TestSets {
+      def f (x:Int) = 2*x
+      def f_plus_one (x:Int) = x+1
+      def f_const (x:Int) = 999
+      assert(!(map(s1, f))(1), "Set of 1")
+      assert((map(s1, f))(2), "Set of 2")
+      assert(!(map(s1,f_const))(888), "888 is not 999")
+      assert((map(s1,f_const))(999)===true)
+      assert((map(s_even,f_plus_one))(5)===true, "map(s_even, f_plus_one) should contain 5")
+      assert((map(s_even,f_plus_one))(6)===false, "map(s_even, f_plus_one) should not contain 6")
     }
   }
 }
