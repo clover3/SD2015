@@ -77,6 +77,8 @@ class FunSetSuite extends FunSuite {
     val s1 = singletonSet(1)
     val s2 = singletonSet(2)
     val s3 = singletonSet(3)
+    val s4 = singletonSet(4)
+    val s5 = singletonSet(5)
     val s_odd = (x:Int) => x % 2 ==1
     val s_even= (x:Int) => x % 2 ==0
     val s_three_multiple= (x:Int) => x % 3 ==0
@@ -153,11 +155,9 @@ class FunSetSuite extends FunSuite {
   test("Diff Test 1") {
     new TestSets {
       val s = diff(s_even, s_three_multiple)
-      assert(contains(s, 1), "diff(even,three multiple) should contain 1")
       assert(contains(s, 2), "diff(even,three multiple) should contain 2")
       assert(contains(s, 3), "diff(even,three multiple) should contain 3")
       assert(contains(s, 4), "diff(even,three multiple) should contain 4")
-      assert(contains(s, 5), "diff(even,three multiple) should contain 5")
       assert(!contains(s, 6), "diff(even,three multiple) should not contain 6")
       assert(!contains(s, 12), "diff(even,three multiple) should not contain 12")
     }
@@ -175,8 +175,34 @@ class FunSetSuite extends FunSuite {
       assert(!contains(s, 10), "filter(even,less than 10) should not contain 12")
     }
   }
+test("filter test 2"){
+    new TestSets {
+      assert(!contains(filter(union(union(s1, s2), s3), union(union(s2, s3), s4)), 1), "there isn't 1 in {2, 3}, which is filtered by s = {1, 2, 3}, p = {2, 3, 4}")
+      assert(!contains(filter(union(union(s1, s2), s3), union(union(s2, s3), s4)), 4), "there isn't 4 in {2, 3}, which is filtered by s = {1, 2, 3}, p = {2, 3, 4}")
+      assert(contains(filter(union(union(s1, s2), s3), union(union(s2, s3), s4)), 2), "there is 2 in {2, 3}, which is filtered by s = {1, 2, 3}, p = {2, 3, 4}")
+    }
+  }
 
-  test("Map works") {
+test("forall test"){
+    new TestSets {
+      def f(x:Int) = 2 * x
+      assert(!forall(union(union(s1, s2), s3), map(union(s1, s2), f)), "all elements in {1, 2, 3} are not satisfying {2, 4}")
+      assert(forall(union(union(s1, s2), s3), union(union(s1, s2), s3)), "all elements in {1, 2, 3} are satisfying {1, 2, 3}")
+      assert(!forall(singletonSet(4), union(union(s1, s2), s3)), "all elements in {4} are not satisfying {1, 2, 3}")
+      assert(forall(union(union(s1, s2), s3), union(union(union(s1, s2), s3), union(s4, s5))), "all elements in {1, 2, 3} are satisfying {1, 2, 3, 4, 5}")
+    }
+  }
+
+test("exist test"){
+    new TestSets {
+      def f(x:Int) = 2 * x
+      assert(exists(union(union(s1, s2), s3), map(union(s1, s2), f)), "in {1, 2, 3}, there is 2 or 4")
+      assert(!exists(union(union(s1, s2), s3), map(union(s2, s3), f)), "in {1, 2, 3}, there isn't 4 or 6")
+      assert(!exists(union(union(s1, s2), s3), singletonSet(4)), "in {1, 2, 3}, there isn't 4")
+    }
+  }
+
+  test("map test 1") {
     new TestSets {
       def f (x:Int) = 2*x
       def f_plus_one (x:Int) = x+1
@@ -185,8 +211,19 @@ class FunSetSuite extends FunSuite {
       assert((map(s1, f))(2), "Set of 2")
       assert(!(map(s1,f_const))(888), "888 is not 999")
       assert((map(s1,f_const))(999)===true)
-      assert((map(s_even,f_plus_one))(5)===true, "map(s_even, f_plus_one) should contain 5")
-      assert((map(s_even,f_plus_one))(6)===false, "map(s_even, f_plus_one) should not contain 6")
+      assert((map(s_even,f_plus_one))(5), ": map(s_even, f_plus_one) should contain 5")
+      assert((map(s_even,f_plus_one))(6)===false, ": map(s_even, f_plus_one) should not contain 6")
     }
   }
+  test("map test 2"){
+    new TestSets {
+      def f(x:Int) = 2 * x
+      val s = map(union(s1, s2), f) // {1, 2} * 2 == {2, 4}
+      assert(contains(s, 2), "map have 2")
+      assert(contains(s, 4), "map have 4")
+      assert(!contains(s, 1), "map doesn't have 1")
+      assert(!contains(s, 3), "map doesn't have 3")
+    }
+  }
+
 }
