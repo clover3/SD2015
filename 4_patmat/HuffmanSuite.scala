@@ -39,6 +39,30 @@ class HuffmanSuite extends FunSuite {
     assert(combine(leaflist) === List(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4)))
   }
 
+  test("create huffman tree") {
+    assert(createCodeTree(List('x','e','x','x','t','x','t')) === Fork(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3),Leaf('x',4),List('e', 't', 'x'),7))
+  }
+
+  test("decode huffman tree") {
+    assert(decode ( createCodeTree(List('x','e','x','x','t','x','t')), List(1, 0, 1) ) === List('x', 't') )
+  }
+
+  test("french code") {
+    assert( decode ( frenchCode, secret) === List('h', 'u', 'f', 'f', 'm', 'a', 'n', 'e', 's', 't', 'c', 'o', 'o', 'l'))
+  }
+
+  test("encode xte") {
+    assert( encode( createCodeTree(List('x','e','x','x','t','x','t')) ) ( List('x','t','e') ) === List(1, 0, 1, 0, 0) )
+  }
+
+  test("convert tree") {
+    assert( convert( createCodeTree(List('x','e','x','x','t','x','t')) ) === List(('e',List(0, 0)), ('t',List(0, 1)), ('x',List(1))) )
+  }
+
+  test("quickEncode") {
+    assert( quickEncode( createCodeTree(List('x','e','x','x','t','x','t')) ) ( List('x','t','e') ) === List(1, 0, 1, 0, 0) )
+  }
+
   test("decode and encode a very short text should be identity") {
     new TestTrees {
       assert(decode(t1, encode(t1)("ab".toList)) === "ab".toList)
