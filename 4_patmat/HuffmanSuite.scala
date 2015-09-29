@@ -44,4 +44,41 @@ class HuffmanSuite extends FunSuite {
       assert(decode(t1, encode(t1)("ab".toList)) === "ab".toList)
     }
   }
+
+  test("Frech encode"){
+    println(decodedSecret)
+    val cloverAnswer =  List( 'h', 'u', 'f', 'f', 'm', 'a', 'n', 'e', 's', 't', 'c', 'o', 'o', 'l' )
+    assert(decodedSecret === cloverAnswer)
+  }
+
+  val pintosString = "2.1.3 Synchronization Proper synchronization is an important part of the solutions to these problems. Any synchronization problem can be easily solved by turning interrupts off: while interrupts are off, there is no concurrency, so theres no possibility for race conditions. Therefore, its tempting to solve all synchronization problems this way, but dont. Instead, use semaphores, locks, and condition variables to solve the bulk of your synchronization problems. Read the tour section on synchronization (see Section A.3 [Synchronization], page 66) or the comments in threads/synch. if youre unsure what synchronization primitives may be used in what situations.  In the Pintos projects, the only class of problem best solved by disabling interrupts is coordinating data shared between a kernel thread and an interrupt handler. Because interrupt handlers cant sleep, they cant acquire locks. This means that data shared between kernel threads and an interrupt handler must be protected within a kernel thread by turning off interrupts.  This project only requires accessing a little bit of thread state from interrupt handlers.  For the alarm clock, the timer interrupt needs to wake up sleeping threads. In the advanced scheduler, the timer interrupt needs to access a few global and per-thread variables. When you access these variables from kernel threads, you will need to disable interrupts to prevent the timer interrupt from interfering.  When you do turn off interrupts, take care to do so for the least amount of code possible, or you can end up losing important things such as timer ticks or input events. Turning off interrupts also increases the interrupt handling latency, which"
+
+  test("Quick Encode Test"){
+    val charList1 = "ab".toList
+    val charList2 = "aabababababaaabab".toList
+    new TestTrees {
+      assert(encode(t1)(charList1) === quickEncode(t1)(charList1))
+      assert(encode(t1)(charList2) === quickEncode(t1)(charList2))
+    }
+  }
+
+  test("Quick Encode Test2"){
+    val charList1 = string2Chars(pintosString)
+    val tree = createCodeTree(charList1)
+    val query = "synch".toList
+    val cloverAnswer =  List(0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0)
+    assert(encode(tree)(query) === quickEncode(tree)(query))
+    assert(encode(tree)(query) === cloverAnswer )
+  }
+
+
+  test("Creation Test"){
+    val charList1 = string2Chars(pintosString)
+    val charList2 = string2Chars("Synchronization")
+    val tree = createCodeTree(charList1)
+    val cloverAnswer = List(0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1)
+    val encoded = encode(tree)(charList2)
+    assert(encoded === cloverAnswer )
+    assert(decode(tree, encoded) === charList2)
+  }
 }
