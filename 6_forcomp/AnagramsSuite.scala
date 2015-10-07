@@ -28,6 +28,9 @@ class AnagramsSuite extends FunSuite {
     assert(wordOccurrences("zaybwc") === List(('a', 1), ('b', 1), ('c', 1), ('w', 1), ('y', 1), ('z', 1)))
   }
 
+  test("sentenceOccurrences: Robert Love") {
+    assert(sentenceOccurrences(List("Robert", "Love")) === List(('b', 1), ('e', 2), ('l', 1), ('o', 2), ('r',2), ('t', 1), ('v',1)))
+  }
 
   test("dictionaryByOccurrences.get: eat") {
     assert(dictionaryByOccurrences.get(List(('a', 1), ('e', 1), ('t', 1))).map(_.toSet) === Some(Set("ate", "eat", "tea")))
@@ -57,6 +60,12 @@ class AnagramsSuite extends FunSuite {
     assert(subtract(abbc, abbc) === Nil)
   }
 
+  test("subtract: lard - ra") {
+    val lard = List(('a', 1), ('d', 1), ('l', 1), ('r', 3))
+    val r = List(('r', 1), ('a', 1))
+    val ld = List(('d', 1), ('l', 1), ('r', 2))
+    assert(subtract(lard, r) === ld)
+  }
 
 
   test("combinations: []") {
@@ -138,4 +147,9 @@ class AnagramsSuite extends FunSuite {
     assert(sentenceAnagrams(sentence) === anas)
   }
 
+test("sentence anagrams: Apple pie") {
+  val sentence = List("Apple", "pie")
+  val anas = Set(List("ale", "pep", "pi"), List("leap", "pipe"), List("pail", "peep"), List("Al", "pep", "pie"), List("pipe", "plea"), List("pep", "Al", "pie"), List("pie", "Al", "pep"), List("ale", "pi", "pep"), List("pipe", "leap"), List("peep", "pi", "Al"), List("pep", "pi", "ale"), List("Al", "pie", "pep"), List("plea", "pipe"), List("pie", "pep", "Al"), List("peep", "Al", "pi"), List("pep", "pie", "Al"), List("peal", "pipe"), List("pep", "ale", "pi"), List("pie", "apple"), List("pale", "pipe"), List("pipe", "pale"), List("pip", "Peale"), List("pipe", "peal"), List("Al", "peep", "pi"), List("Peale", "pip"), List("pi", "ale", "pep"), List("Al", "pi", "peep"), List("apple", "pie"), List("peep", "pail"), List("pi", "Al", "peep"), List("pi", "pep", "ale"), List("pi", "peep", "Al"))
+  assert(sentenceAnagrams(sentence).toSet === anas)
+}
 }

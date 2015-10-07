@@ -69,6 +69,9 @@ class BloxorzSuite extends FunSuite {
   
       trait LevelBug extends SolutionChecker {
           /* terrain for level 1*/
+  /*
+  trait LevelBug extends SolutionChecker {
+    /* terrain for level 1*/
 
   val level =
     """ooo-------
@@ -86,7 +89,6 @@ class BloxorzSuite extends FunSuite {
        assert(solve(solution) == startBlock)
      }
    }
-
    
 
   trait Level3_1 extends SolutionChecker {
